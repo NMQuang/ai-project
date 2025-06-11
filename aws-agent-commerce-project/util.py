@@ -91,4 +91,4 @@ def invoke_agent(agentId: str, agentAliasId: str, inputText: str, sessionId: str
                                 print(f"  PII Detected: {pii['type']} (Action: {pii['action']})")
 
     print(f"\n\nSession ID: {response.get('sessionId')}")
-    return
+    return agent_response

@@ -35,7 +35,7 @@ def lambda_handler(event, context):
         # Product Restock Order creation code would go here.
         response_data = {"status": "Success"}
     else:
-        response_data = {"message": "Unknwon API Path"}
+        response_data = {"message": "Unknown API Path"}
         
 
     #response_body = {
