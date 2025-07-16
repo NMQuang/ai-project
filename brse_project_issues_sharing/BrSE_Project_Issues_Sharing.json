@@ -1,0 +1,315 @@
+{
+  "name": "BrSE_Project_Issues&Sharing",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "1ZCK_htyFLRMBLjrwaJTzQ-8KSUXVb3Y1AQq0K5RssWk",
+        "range": "App!A:D",
+        "keyRow": 1,
+        "options": {
+          "usePathForKeyRow": false,
+          "valueInputMode": "RAW"
+        }
+      },
+      "name": "Write to App",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        60,
+        940
+      ],
+      "id": "7012274a-fcec-4476-8f68-36e55ccbab48",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pyfp7haubMWBULht",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "sheetId": "<YOUR_SPREADSHEET_ID>",
+        "range": "Web!A:D",
+        "options": {}
+      },
+      "name": "Write to Web",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        60,
+        1140
+      ],
+      "id": "7d825f5a-9be1-4c87-a2af-1fae96400880",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pyfp7haubMWBULht",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "sheetId": "<YOUR_SPREADSHEET_ID>",
+        "range": "Infra!A:D",
+        "options": {}
+      },
+      "name": "Write to Infra",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        60,
+        1360
+      ],
+      "id": "8df96f16-0397-4216-9919-652fe507140f",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pyfp7haubMWBULht",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "submit-automation",
+        "options": {}
+      },
+      "id": "23f6bc73-5c6b-417e-8969-4d7e64051368",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1160,
+        1220
+      ],
+      "webhookId": "fd4999a7-b415-4cf9-b8fb-7cd34471f55d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.team}}",
+              "value2": "App"
+            }
+          ]
+        }
+      },
+      "name": "Is App1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        1020
+      ],
+      "id": "68440d16-b697-471f-89be-79d17fe4a9cb"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.team}}",
+              "value2": "Web"
+            }
+          ]
+        }
+      },
+      "name": "Is Web1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        1220
+      ],
+      "id": "5ff18d72-ed01-43a2-b562-ad4e8e26e1d6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.team}}",
+              "value2": "Infra"
+            }
+          ]
+        }
+      },
+      "name": "Is Infra1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        1440
+      ],
+      "id": "a8a34fd6-6f8f-40d8-a01d-4c0281293111"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "69ab1544-18af-4cc6-a555-7e84dc8905ca",
+              "name": "name",
+              "value": "={{$json.body.name}}",
+              "type": "string"
+            },
+            {
+              "id": "897bee06-af83-40b8-98c8-2b4250142d92",
+              "name": "team",
+              "value": "={{$json.body.team}}",
+              "type": "string"
+            },
+            {
+              "id": "eeac208e-0c4c-42d6-b974-9e95e301866c",
+              "name": "task",
+              "value": "={{$json.body.task}}",
+              "type": "string"
+            },
+            {
+              "id": "9ae3f541-8b76-4610-9f6f-79b9cf4b7574",
+              "name": "status",
+              "value": "={{$json.body.status}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -760,
+        1120
+      ],
+      "id": "17f659ac-3c5f-4361-9a53-87ee4c93828e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bd26a132-8b6c-47e7-9580-73d36ccfadc9",
+              "name": "row",
+              "value": "{{ [ $json.name, $json.team, $json.task, $json.status ] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        960
+      ],
+      "id": "c25a9ff7-f0c6-43a5-95ee-97cce60a2304",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Is App1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Web1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Web1": {
+      "main": [
+        [
+          {
+            "node": "Write to Web",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Infra1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Infra1": {
+      "main": [
+        [
+          {
+            "node": "Write to Infra",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Is App1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write to App": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Write to App",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3506a618-0ff5-4b0f-8f78-1a2324f3e8e8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e86b1df2c1bcf5412784dd96b31c38dba69eb2a639be0a7870d98c75b6ef2363"
+  },
+  "id": "fNCKnbWXw2HM4a1Y",
+  "tags": []
+}

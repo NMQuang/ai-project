@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Báo Cáo Vấn Đề</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+	#thongBao .alert {
+	  border-left: 5px solid #0d6efd;
+	  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+	}
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container mt-5 mb-5">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Biểu mẫu báo cáo vấn đề dự án</h4>
+      </div>
+      <div class="card-body">
+	  	<div id="thongBao" class="mt-4" aria-live="polite"></div>
+        <form id="issueForm">
+          <div class="mb-3">
+            <label for="stt" class="form-label">STT</label>
+            <input type="number" class="form-control" id="stt" name="stt" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="loaiDuAn" class="form-label">Loại dự án</label>
+            <select class="form-select" id="loaiDuAn" name="loaiDuAn" required>
+              <option selected disabled>-- Chọn loại dự án --</option>
+              <option value="App">App</option>
+              <option value="Web">Web</option>
+              <option value="Infra">Infra</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="tenDuAn" class="form-label">Tên dự án</label>
+            <select class="form-select" id="tenDuAn" name="tenDuAn" required>
+              <option selected disabled>-- Chọn dự án --</option>
+              <option value="Project A">Project A</option>
+              <option value="Project D">Project D</option>
+              <option value="Project E">Project E</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="ngonNgu" class="form-label">Ngôn ngữ phát triển</label>
+            <select class="form-select" id="ngonNgu" name="ngonNgu" required>
+              <option selected disabled>-- Chọn ngôn ngữ --</option>
+              <option value="Flutter">Flutter</option>
+              <option value="Xamarin">Xamarin</option>
+              <option value="ReactJS">ReactJS</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="vanDe" class="form-label">Vấn đề</label>
+            <input type="text" class="form-control" id="vanDe" name="vanDe" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="phanLoai" class="form-label">Phân loại vấn đề</label>
+            <select class="form-select" id="phanLoai" name="phanLoai" required>
+              <option selected disabled>-- Chọn phân loại --</option>
+              <option value="Communication">Communication</option>
+              <option value="Technical">Technical</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="nguoiNeu" class="form-label">Người nêu vấn đề</label>
+            <input type="text" class="form-control" id="nguoiNeu" name="nguoiNeu" value="QuangNM1" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="ngayNeu" class="form-label">Ngày nêu</label>
+            <input type="date" class="form-control" id="ngayNeu" name="ngayNeu" value="2025-06-27" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="nguyenNhan" class="form-label">Nguyên nhân</label>
+            <input type="text" class="form-control" id="nguyenNhan" name="nguyenNhan">
+          </div>
+
+          <div class="mb-3">
+            <label for="xuLy" class="form-label">Cách xử lý đã làm</label>
+            <input type="text" class="form-control" id="xuLy" name="xuLy">
+          </div>
+
+          <div class="mb-3">
+            <label for="phongTranh" class="form-label">Biện pháp phòng tránh</label>
+            <input type="text" class="form-control" id="phongTranh" name="phongTranh">
+          </div>
+
+          <div class="mb-4">
+            <label for="trangThai" class="form-label">Trạng thái áp dụng</label>
+            <select class="form-select" id="trangThai" name="trangThai">
+              <option selected disabled>-- Chọn trạng thái --</option>
+              <option value="Chưa áp dụng">Chưa áp dụng</option>
+              <option value="Đã áp dụng">Đã áp dụng</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">Gửi báo cáo</button>
+        </form>
+
+      </div>
+    </div>
+	
+  </div>
+  <script>
+    document.getElementById("issueForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const url = "http://localhost:5678/webhook/submit-automation";
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData,
+		  mode: "cors"
+        });
+
+        const result = await response.json();
+	
+        const thongBao = document.getElementById("thongBao");
+		thongBao.innerHTML = `
+		  <div class="alert ${result.success ? 'alert-success' : 'alert-danger'} alert-dismissible fade show" role="alert">
+			${result.message}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		  </div>
+		`;
+		thongBao.scrollIntoView({ behavior: "smooth" });
+		
+        if (result.success) form.reset();
+      } catch (err) {
+        document.getElementById("thongBao").innerHTML = `
+          <div class="alert alert-danger">
+            ❌ Lỗi khi gửi. Vui lòng thử lại.
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
